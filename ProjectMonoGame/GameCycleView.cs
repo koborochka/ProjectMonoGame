@@ -12,18 +12,16 @@ public class GameCycleView : Game, IGameplayView
     private Vector2 _playerPos = Vector2.Zero;
     private Texture2D _playerImage;
 
-    public event EventHandler CycleFinished = delegate { };
-    public event EventHandler<ControlsEventArgs> PlayerMoved = delegate { };
+    public event EventHandler CycleFinished;
+    public event EventHandler<ControlsEventArgs> PlayerMoved;
+    public event EventHandler NothingHappens;
     
-    
-
 
     public GameCycleView()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-
     }
 
     protected override void Initialize()
@@ -45,56 +43,61 @@ public class GameCycleView : Game, IGameplayView
     protected override void Update(GameTime gameTime)
     {
         var keys = Keyboard.GetState().GetPressedKeys();
-        if (keys.Length > 0)
-        {
-            var k = keys[0];
-            switch (k)
+        foreach (var key in keys)
+        { 
+            switch (key)
             {
                 case Keys.W:
                 {
-                    PlayerMoved.Invoke(
-                        this, 
-                        new ControlsEventArgs { 
-                            Direction = IGameplayModel.Direction.forward }
-                    );
+                    InvokeDirection(IGameplayModel.Direction.forward);
                     break;
                 }
                 case Keys.S:
                 {
-                    PlayerMoved.Invoke(
-                        this, 
-                        new ControlsEventArgs { 
-                            Direction = IGameplayModel.Direction.backward }
-                    );
-                    break;                    
+                    InvokeDirection(IGameplayModel.Direction.backward);
+                    break;
                 }
                 case Keys.D:
                 {
-                    PlayerMoved.Invoke(
-                        this, 
-                        new ControlsEventArgs { 
-                            Direction = IGameplayModel.Direction.right }
-                    );                    
+                    InvokeDirection(IGameplayModel.Direction.right);
                     break;
                 }
                 case Keys.A:
                 {
-                    PlayerMoved.Invoke(
-                        this, 
-                        new ControlsEventArgs { 
-                            Direction = IGameplayModel.Direction.left }
-                    );
-                    break;                    
-                }
-                case Keys.Escape:
-                {
-                    Exit();
+                    InvokeDirection(IGameplayModel.Direction.left);
                     break;
                 }
+                case Keys.Escape:
+                    Exit();
+                    break;
+                default:
+                    InvokeNothingHappens();
+                    break;
             }
-        }  
-        base.Update(gameTime);    
-        CycleFinished.Invoke(this, new EventArgs());
+        }
+
+        if (keys.Length == 0)
+        {
+            InvokeNothingHappens();
+        }
+        
+        base.Update(gameTime);
+        CycleFinished?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void InvokeDirection(IGameplayModel.Direction direction)
+    {
+        PlayerMoved?.Invoke(
+            this,
+            new ControlsEventArgs
+            { Direction = direction }
+            );
+    }
+
+    private void InvokeNothingHappens()
+    {
+        NothingHappens?.Invoke(this, EventArgs.Empty);
+
     }
 
     protected override void Draw(GameTime gameTime)

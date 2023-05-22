@@ -8,7 +8,10 @@ public interface IGameplayModel
     event EventHandler<GameplayEventArgs> Updated;
 
     void Update();
-    void MovePlayer(Direction dir);
+    void MovePlayer(Direction direction);
+
+    void SlowDownPlayer();
+
 
     public enum Direction : byte
     {

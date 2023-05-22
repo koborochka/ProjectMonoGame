@@ -10,7 +10,7 @@ public static class Program
         //using (var game = new GameCycleView())
         //var game = new GameCycleView();
         //game.Run();         
-        GameplayPresenter g = new GameplayPresenter(new GameCycleView(), new GameCycle());
-        g.LaunchGame();
+        GameplayPresenter game = new GameplayPresenter(new GameCycleView(), new GameCycleModel());
+        game.LaunchGame();
     }
 }

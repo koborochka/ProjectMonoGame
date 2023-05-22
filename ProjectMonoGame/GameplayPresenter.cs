@@ -17,6 +17,7 @@ public class GameplayPresenter
 
         _gameplayView.CycleFinished += ViewModelUpdate;
         _gameplayView.PlayerMoved += ViewModelMovePlayer;
+        _gameplayView.NothingHappens += ViewModelSlowDownPlayer;
         _gameplayModel.Updated += ModelViewUpdate;
 
     }
@@ -39,5 +40,10 @@ public class GameplayPresenter
     private void ViewModelUpdate(object sender, EventArgs e)
     {
         _gameplayModel.Update();
+    }
+
+    private void ViewModelSlowDownPlayer(object sender, EventArgs e)
+    {
+        _gameplayModel.SlowDownPlayer();
     }
 }
