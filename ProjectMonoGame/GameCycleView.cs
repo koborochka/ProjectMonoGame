@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -14,8 +15,6 @@ public class GameCycleView : Game, IGameplayView
 
     public event EventHandler CycleFinished;
     public event EventHandler<ControlsEventArgs> PlayerMoved;
-    public event EventHandler NothingHappens;
-    
 
     public GameCycleView()
     {
@@ -43,61 +42,42 @@ public class GameCycleView : Game, IGameplayView
     protected override void Update(GameTime gameTime)
     {
         var keys = Keyboard.GetState().GetPressedKeys();
+        var directions = new List<IGameplayModel.Direction>();
         foreach (var key in keys)
         { 
             switch (key)
             {
                 case Keys.W:
                 {
-                    InvokeDirection(IGameplayModel.Direction.forward);
+                    directions.Add(IGameplayModel.Direction.forward);
                     break;
                 }
                 case Keys.S:
                 {
-                    InvokeDirection(IGameplayModel.Direction.backward);
+                    directions.Add(IGameplayModel.Direction.backward);
                     break;
                 }
                 case Keys.D:
                 {
-                    InvokeDirection(IGameplayModel.Direction.right);
+                    directions.Add(IGameplayModel.Direction.right);
                     break;
                 }
                 case Keys.A:
                 {
-                    InvokeDirection(IGameplayModel.Direction.left);
+                    directions.Add(IGameplayModel.Direction.left);
                     break;
                 }
                 case Keys.Escape:
                     Exit();
                     break;
-                default:
-                    InvokeNothingHappens();
-                    break;
             }
         }
-
-        if (keys.Length == 0)
-        {
-            InvokeNothingHappens();
-        }
+        
+        PlayerMoved?.Invoke(this, new ControlsEventArgs { Directions = directions });
         
         base.Update(gameTime);
+        
         CycleFinished?.Invoke(this, EventArgs.Empty);
-    }
-
-    private void InvokeDirection(IGameplayModel.Direction direction)
-    {
-        PlayerMoved?.Invoke(
-            this,
-            new ControlsEventArgs
-            { Direction = direction }
-            );
-    }
-
-    private void InvokeNothingHappens()
-    {
-        NothingHappens?.Invoke(this, EventArgs.Empty);
-
     }
 
     protected override void Draw(GameTime gameTime)
