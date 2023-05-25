@@ -10,11 +10,16 @@ public class GameCycleView : Game, IGameplayView
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Vector2 _playerPos = Vector2.Zero;
     private Texture2D _playerImage;
 
+    private Dictionary<int, IObject> _objects = new Dictionary<int, IObject>();
+    private readonly Dictionary<int, Texture2D> _textures = new Dictionary<int, Texture2D>();
     public event EventHandler CycleFinished;
     public event EventHandler<ControlsEventArgs> PlayerMoved;
+    public void LoadGameCycleParameters(Vector2 pos)
+    {
+        throw new NotImplementedException();
+    }
 
     public GameCycleView()
     {
@@ -31,12 +36,12 @@ public class GameCycleView : Game, IGameplayView
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        _textures.Add(1, Content.Load<Texture2D>("space_ship"));
     }
 
-    public void LoadGameCycleParameters(Vector2 playerPos)
+    public void LoadGameCycleParameters(Dictionary<int, IObject> objects)
     {
-        _playerPos = playerPos;
-        _playerImage = Content.Load<Texture2D>("space_ship");
+        _objects = objects;        
     }
 
     protected override void Update(GameTime gameTime)
@@ -85,7 +90,10 @@ public class GameCycleView : Game, IGameplayView
         GraphicsDevice.Clear(Color.Black);
         base.Draw(gameTime);
         _spriteBatch.Begin();
-        _spriteBatch.Draw(_playerImage, _playerPos, Color.White);
+        foreach (var obj in _objects.Values)
+        {
+            _spriteBatch.Draw(_textures[obj.ImageId],  obj.Position, Color.White);
+        }  	
         _spriteBatch.End();  
     }
 }

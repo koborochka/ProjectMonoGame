@@ -10,6 +10,9 @@ public interface IGameplayModel
 
     void Update();
     void MovePlayer(List<Direction> direction);
+    Dictionary<int, IObject> Objects { get; set; }
+    void Initialize();    
+    int PlayerId { get; set; }
 
     public enum Direction : byte
     {
@@ -22,5 +25,6 @@ public interface IGameplayModel
 
 public class GameplayEventArgs : EventArgs
 {
-    public Vector2 PlayerPos { get; set; }
+    public Dictionary<int, IObject> Objects { get; set; }    
+
 }

@@ -8,7 +8,7 @@ public interface IGameplayView
 {
     event EventHandler CycleFinished;
     event EventHandler<ControlsEventArgs> PlayerMoved;
-    void LoadGameCycleParameters(Vector2 pos);
+    void LoadGameCycleParameters(Dictionary<int, IObject> objects);
     void Run();
 }
 

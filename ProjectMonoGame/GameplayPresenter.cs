@@ -18,7 +18,8 @@ public class GameplayPresenter
         _gameplayView.CycleFinished += ViewModelUpdate;
         _gameplayView.PlayerMoved += ViewModelMovePlayer;
         _gameplayModel.Updated += ModelViewUpdate;
-
+        
+        _gameplayModel.Initialize(); //Инициализируем игровой цикл
     }
     
     public void LaunchGame()
@@ -33,7 +34,7 @@ public class GameplayPresenter
 
     private void ModelViewUpdate(object sender, GameplayEventArgs e)
     {
-        _gameplayView.LoadGameCycleParameters(e.PlayerPos);
+        _gameplayView.LoadGameCycleParameters(e.Objects);
     }
 
     private void ViewModelUpdate(object sender, EventArgs e)
