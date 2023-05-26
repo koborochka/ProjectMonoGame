@@ -11,25 +11,28 @@ public class GameCycleView : Game, IGameplayView
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private Texture2D _playerImage;
-
     private Dictionary<int, IObject> _objects = new Dictionary<int, IObject>();
     private readonly Dictionary<int, Texture2D> _textures = new Dictionary<int, Texture2D>();
     public event EventHandler CycleFinished;
     public event EventHandler<ControlsEventArgs> PlayerMoved;
-    public void LoadGameCycleParameters(Vector2 pos)
-    {
-        throw new NotImplementedException();
-    }
+
+    public int MapWidth { get; private set; }
+    public int MapHeight { get; private set; }
+
 
     public GameCycleView()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
-        IsMouseVisible = true;
+        IsMouseVisible = false;
     }
 
     protected override void Initialize()
     {
+        _graphics.PreferredBackBufferWidth = MapWidth = GraphicsDevice.DisplayMode.Width;
+        _graphics.PreferredBackBufferHeight = MapHeight = GraphicsDevice.DisplayMode.Height;
+        _graphics.IsFullScreen = true;
+        _graphics.ApplyChanges();
         base.Initialize();
     }
 
@@ -37,6 +40,7 @@ public class GameCycleView : Game, IGameplayView
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _textures.Add(1, Content.Load<Texture2D>("space_ship"));
+        _textures.Add(2, Content.Load<Texture2D>("4698768"));
     }
 
     public void LoadGameCycleParameters(Dictionary<int, IObject> objects)
