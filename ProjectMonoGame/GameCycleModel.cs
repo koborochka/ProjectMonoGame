@@ -12,7 +12,7 @@ public class GameCycleModel : IGameplayModel
     public int PlayerId { get; set; }
     public Dictionary<int, IObject> Objects { get; set; }
 
-    private const float ConstantAcceleration = 0.06f; // Константа ускорения
+    private const float ConstantAcceleration = 0.06f; 
     private int _currentId; 
     private Timer _asteroidTimer;
     private readonly int _mapWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
@@ -25,7 +25,7 @@ public class GameCycleModel : IGameplayModel
         _currentId = 1;
         var player = new SpaceShip(_mapWidth, _mapHeight)
         {
-            Position = new Vector2 (250, 250),
+            Position = new Vector2 (_mapWidth / 2,_mapHeight / 2),
             ImageId = 1,
             Speed = Vector2.Zero
         };
@@ -61,41 +61,56 @@ public class GameCycleModel : IGameplayModel
             player.Speed += acceleration;
         }
     }
-
+    
     private void GenerateAsteroid(object state)
     {
         var random = new Random();
         Vector2 initialPosition;
-        float rand = (float)random.NextDouble();
-        if (rand < 0.25f) // Генерация справа
+        var randomInt = random.Next(1, 5);
+
+        switch (randomInt)
         {
-            initialPosition = new Vector2(_mapWidth, random.Next(0, _mapHeight));
+            case 1: 
+                initialPosition = new Vector2(_mapWidth, random.Next(0, _mapHeight));
+                break;
+            case 2: 
+                initialPosition = new Vector2(random.Next(0, _mapWidth), -_mapHeight);
+                break;
+            case 3: 
+                initialPosition = new Vector2(random.Next(0, _mapWidth), _mapHeight);
+                break;
+            default: 
+                initialPosition = new Vector2(-_mapWidth, random.Next(0, _mapHeight));
+                break;
         }
-        else if (rand < 0.5f) // Генерация сверху
-        {
-            initialPosition = new Vector2(random.Next(0, _mapWidth), -_mapHeight);
-        }
-        else if (rand < 0.75f) // Генерация снизу
-        {
-            initialPosition = new Vector2(random.Next(0, _mapWidth), _mapHeight);
-        }
-        else // Генерация слева
-        {
-            initialPosition = new Vector2(-_mapWidth, random.Next(0, _mapHeight));
-        }
-        
         var direction = Vector2.Normalize(Objects[PlayerId].Position - initialPosition);
 
-        var asteroid = new Asteroid
+        var randomAsteroidNumber = random.Next(2, 5);
+        var asteroid = new Asteroid();
+        switch (randomAsteroidNumber)
         {
-            ImageId = 2,
-            Direction = direction,
-            Position = initialPosition,
-            Speed = direction * 3
-        };
+            case 2:
+                CreateNewAsteroid(asteroid,randomAsteroidNumber,direction,3,initialPosition);
+                break;
+            case 3:
+                CreateNewAsteroid(asteroid,randomAsteroidNumber,direction,2,initialPosition);
+                break;
+            case 4:
+                CreateNewAsteroid(asteroid,randomAsteroidNumber,direction,5,initialPosition);
+                break;
+                
+        }
 
         var asteroidId = _currentId;
         Objects.Add(asteroidId, asteroid);
         _currentId++;
+    }
+
+    private void CreateNewAsteroid(Asteroid asteroid, int imageId, Vector2 direction, int speedCoefficient, Vector2 initialPosition)
+    {
+        asteroid.ImageId = imageId;
+        asteroid.Direction = direction;
+        asteroid.Speed = direction * speedCoefficient;
+        asteroid.Position = initialPosition;
     }
 }

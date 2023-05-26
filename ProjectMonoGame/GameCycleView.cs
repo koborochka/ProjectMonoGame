@@ -39,6 +39,9 @@ public class GameCycleView : Game, IGameplayView
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _textures.Add(1, Content.Load<Texture2D>("space_ship"));
         _textures.Add(2, Content.Load<Texture2D>("asteroid_1"));
+        _textures.Add(3, Content.Load<Texture2D>("asteroid_2"));
+        _textures.Add(4, Content.Load<Texture2D>("asteroid_3"));
+
     }
 
     public void LoadGameCycleParameters(Dictionary<int, IObject> objects)

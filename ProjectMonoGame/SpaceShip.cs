@@ -38,4 +38,10 @@ public class SpaceShip : IObject
     {
         Position += Speed;
     }
+    
+    public RectangleCollider Collider { get; set; }
+    public void MoveCollider(Vector2 newPos)
+    {
+        throw new NotImplementedException();
+    }
 }

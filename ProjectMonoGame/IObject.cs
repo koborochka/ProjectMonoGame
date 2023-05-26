@@ -2,7 +2,7 @@
 
 namespace ProjectMonoGame;
 
-public interface IObject
+public interface IObject : ISolid
 {
     int ImageId { get; set; }   
 
