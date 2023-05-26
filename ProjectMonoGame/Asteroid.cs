@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace ProjectMonoGame;
 
@@ -14,4 +15,5 @@ public class Asteroid : IObject
     {
         Position += Speed;
     }
+    
 }

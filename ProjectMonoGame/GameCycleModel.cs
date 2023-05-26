@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectMonoGame;
 
@@ -11,32 +12,27 @@ public class GameCycleModel : IGameplayModel
     public int PlayerId { get; set; }
     public Dictionary<int, IObject> Objects { get; set; }
 
-    private const float ConstantAcceleration = 0.05f; // Константа ускорения
+    private const float ConstantAcceleration = 0.06f; // Константа ускорения
     private int _currentId; 
     private Timer _asteroidTimer;
-    private int _mapWidth;
-    private int _mapHeight;
+    private readonly int _mapWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+    private readonly int _mapHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
     
-    public void ReceiveScreenValues(int mapWidth, int mapHeight)
-    {
-        _mapWidth = mapWidth;
-        _mapHeight = mapHeight;
-    }
 
     public void Initialize()
     {
         Objects = new Dictionary<int, IObject>();
         _currentId = 1;
-        var player = new SpaceShip
+        var player = new SpaceShip(_mapWidth, _mapHeight)
         {
             Position = new Vector2 (250, 250),
             ImageId = 1,
-            Speed = new Vector2 (0, 0)
+            Speed = Vector2.Zero
         };
         Objects.Add(_currentId, player);
         PlayerId = _currentId;
         _currentId++;
-        _asteroidTimer = new Timer(GenerateAsteroid, null, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(3));
+        _asteroidTimer = new Timer(GenerateAsteroid, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(1));
     }
 
     public void Update()
@@ -69,7 +65,6 @@ public class GameCycleModel : IGameplayModel
     private void GenerateAsteroid(object state)
     {
         var random = new Random();
-        //var initialPosition = new Vector2(random.Next(0, _mapWidth), random.Next(0, _mapHeight));
         Vector2 initialPosition;
         float rand = (float)random.NextDouble();
         if (rand < 0.25f) // Генерация справа

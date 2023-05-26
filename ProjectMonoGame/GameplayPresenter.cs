@@ -17,15 +17,9 @@ public class GameplayPresenter
 
         _gameplayView.CycleFinished += ViewModelUpdate;
         _gameplayView.PlayerMoved += ViewModelMovePlayer;
-        _gameplayView.MapSizeRequested += ViewModelTransferScreenValues;
         _gameplayModel.Updated += ModelViewUpdate;
         
         _gameplayModel.Initialize(); //Инициализируем игровой цикл
-    }
-
-    private void ViewModelTransferScreenValues(object sender, ScreenEventArgs e)
-    {
-        _gameplayModel.ReceiveScreenValues(e.MapWidth,e.MapHeight);
     }
 
     public void LaunchGame()

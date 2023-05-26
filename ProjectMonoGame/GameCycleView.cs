@@ -10,14 +10,11 @@ public class GameCycleView : Game, IGameplayView
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Texture2D _playerImage;
+ //   private Texture2D _playerImage;
     private Dictionary<int, IObject> _objects = new Dictionary<int, IObject>();
     private readonly Dictionary<int, Texture2D> _textures = new Dictionary<int, Texture2D>();
     public event EventHandler CycleFinished;
     public event EventHandler<ControlsEventArgs> PlayerMoved;
-    public event EventHandler<ScreenEventArgs> MapSizeRequested;
-    private int _mapWidth;
-    private int _mapHeight;
 
 
     public GameCycleView()
@@ -29,13 +26,11 @@ public class GameCycleView : Game, IGameplayView
 
     protected override void Initialize()
     {
-        _graphics.PreferredBackBufferWidth = _mapWidth = GraphicsDevice.DisplayMode.Width;
-        _graphics.PreferredBackBufferHeight = _mapHeight = GraphicsDevice.DisplayMode.Height;
+        _graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+        _graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
         _graphics.IsFullScreen = true;
         _graphics.ApplyChanges();
         
-        MapSizeRequested?.Invoke(this,new ScreenEventArgs {MapWidth = _mapWidth, MapHeight = _mapHeight});
-
         base.Initialize();
     }
 
