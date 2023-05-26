@@ -13,6 +13,7 @@ public interface IGameplayModel
     Dictionary<int, IObject> Objects { get; set; }
     void Initialize();    
     int PlayerId { get; set; }
+    public void ReceiveScreenValues(int mapWidth, int mapHeight);
 
     public enum Direction : byte
     {
@@ -25,6 +26,6 @@ public interface IGameplayModel
 
 public class GameplayEventArgs : EventArgs
 {
-    public Dictionary<int, IObject> Objects { get; set; }    
-
+    public Dictionary<int, IObject> Objects { get; set; }
 }
+

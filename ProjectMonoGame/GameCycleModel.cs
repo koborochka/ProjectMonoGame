@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectMonoGame;
 
@@ -15,6 +14,14 @@ public class GameCycleModel : IGameplayModel
     private const float ConstantAcceleration = 0.05f; // Константа ускорения
     private int _currentId; 
     private Timer _asteroidTimer;
+    private int _mapWidth;
+    private int _mapHeight;
+    
+    public void ReceiveScreenValues(int mapWidth, int mapHeight)
+    {
+        _mapWidth = mapWidth;
+        _mapHeight = mapHeight;
+    }
 
     public void Initialize()
     {
@@ -24,14 +31,14 @@ public class GameCycleModel : IGameplayModel
         {
             Position = new Vector2 (250, 250),
             ImageId = 1,
-            Speed = new Vector2 (0, 1)
+            Speed = new Vector2 (0, 0)
         };
-        Objects.Add(1, player);
+        Objects.Add(_currentId, player);
         PlayerId = _currentId;
         _currentId++;
         _asteroidTimer = new Timer(GenerateAsteroid, null, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(3));
     }
-    
+
     public void Update()
     {
         foreach (var obj in Objects.Values)
@@ -58,61 +65,42 @@ public class GameCycleModel : IGameplayModel
             player.Speed += acceleration;
         }
     }
-    
+
     private void GenerateAsteroid(object state)
     {
         var random = new Random();
+        //var initialPosition = new Vector2(random.Next(0, _mapWidth), random.Next(0, _mapHeight));
+        Vector2 initialPosition;
+        float rand = (float)random.NextDouble();
+        if (rand < 0.25f) // Генерация справа
+        {
+            initialPosition = new Vector2(_mapWidth, random.Next(0, _mapHeight));
+        }
+        else if (rand < 0.5f) // Генерация сверху
+        {
+            initialPosition = new Vector2(random.Next(0, _mapWidth), -_mapHeight);
+        }
+        else if (rand < 0.75f) // Генерация снизу
+        {
+            initialPosition = new Vector2(random.Next(0, _mapWidth), _mapHeight);
+        }
+        else // Генерация слева
+        {
+            initialPosition = new Vector2(-_mapWidth, random.Next(0, _mapHeight));
+        }
+        
+        var direction = Vector2.Normalize(Objects[PlayerId].Position - initialPosition);
+
         var asteroid = new Asteroid
         {
             ImageId = 2,
-            Position = new Vector2(random.Next(0, 800), random.Next(0, 600)),
-            Speed = new Vector2(3,0)
+            Direction = direction,
+            Position = initialPosition,
+            Speed = direction * 3
         };
-    
-        Objects.Add(_currentId, asteroid);
-        _currentId++;
-    }
-    
-   /* public void GenerateAsteroid()
-    {
-        GameCycleView.
-        var random = new Random();
-        var initialPosition = new Vector2(random.Next(0, MapWidth), random.Next(0, MapHeight));
-        var direction = Vector2.Normalize(Objects[_playerId].Position - initialPosition);
-
-        var asteroid = new Asteroid(direction);
-        asteroid.Position = initialPosition;
-        asteroid.Speed = direction * ConstantSpeed;
 
         var asteroidId = _currentId;
         Objects.Add(asteroidId, asteroid);
         _currentId++;
-    }*/
-
-}
-
-public class SpaceShip : IObject
-{
-    public int ImageId { get; set; }
-    public Vector2 Position { get; set; }
-    public Vector2 Speed { get; set; } 
-
-    public void Update()
-    {
-        Position += Speed;
-    }
-}
-
-public class Asteroid : IObject
-{
-    public int ImageId { get; set; }
-    public Vector2 Position { get; set; }
-    public Vector2 Speed { get; set; }
-
-    public Vector2 Direction { get; set; }
-
-    public void Update()
-    {
-        Position += Speed;
     }
 }
