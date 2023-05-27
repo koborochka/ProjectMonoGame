@@ -5,8 +5,12 @@ namespace ProjectMonoGame;
 
 public class SpaceShip : IObject
 {
+    private readonly int _mapWidth;
+    private readonly int _mapHeight;
     public int ImageId { get; set; }
+    public int Id { get; set; }
     private Vector2 _position;
+    public Vector2 Speed { get; set; }
     public Vector2 Position
     {
         get => _position;
@@ -21,13 +25,7 @@ public class SpaceShip : IObject
             }
         }
     }
-
-
-    public Vector2 Speed { get; set; }
-
-    private readonly int _mapWidth;
-    private readonly int _mapHeight;
-
+    
     public SpaceShip(int mapWidth, int mapHeight)
     {
         _mapWidth = mapWidth;
@@ -37,11 +35,12 @@ public class SpaceShip : IObject
     public void Update()
     {
         Position += Speed;
+        MoveCollider(Position);
     }
     
     public RectangleCollider Collider { get; set; }
     public void MoveCollider(Vector2 newPos)
     {
-        throw new NotImplementedException();
+        Collider = new RectangleCollider((int)Position.X, (int)Position.Y, 50, 50);
     }
 }

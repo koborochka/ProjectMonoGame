@@ -19,7 +19,7 @@ public class GameplayPresenter
         _gameplayView.PlayerMoved += ViewModelMovePlayer;
         _gameplayModel.Updated += ModelViewUpdate;
         
-        _gameplayModel.Initialize(); //Инициализируем игровой цикл
+        _gameplayModel.Initialize(); 
     }
 
     public void LaunchGame()

@@ -11,7 +11,8 @@ public interface ISolid
 
 public class RectangleCollider
 {
-    public Rectangle Boundary { get; set; }
+    public Rectangle Boundary { get; }
+    
     public RectangleCollider(int x, int y, int width, int height)
     {
         Boundary = new Rectangle(x, y, width, height);
@@ -21,6 +22,5 @@ public class RectangleCollider
     {
         return r1.Boundary.Intersects(r2.Boundary);
     }
-    
 }
 
