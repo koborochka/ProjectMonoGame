@@ -14,10 +14,12 @@ public class SpaceShip : IObject
     public int Id { get; set; }
     private Vector2 _position;
     public Vector2 Speed { get; set; }
+    public bool IsInBoundsOfScreen =>
+        Position.X > 0 && Position.Y > 0 && Position.X < _mapWidth && Position.Y < _mapHeight;
     public Vector2 Position
     {
         get => _position;
-        set
+        private set
         {
             _position.X = (value.X < 0) ? 0 : (value.X > _mapWidth - TextureWidth) ? _mapWidth - TextureWidth : value.X;
             _position.Y = (value.Y < 0) ? 0 : (value.Y > _mapHeight - TextureHeight) ? _mapHeight - TextureHeight : value.Y;
