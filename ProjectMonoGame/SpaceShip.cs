@@ -12,18 +12,20 @@ public class SpaceShip : IObject
     private const int TextureHeight = 50;
     public int ImageId { get; set; }
     public int Id { get; set; }
-    private Vector2 _position;
     public Vector2 Speed { get; set; }
-    public bool IsInBoundsOfScreen =>
-        Position.X > 0 && Position.Y > 0 && Position.X < _mapWidth && Position.Y < _mapHeight;
+    public bool IsInBoundsOfScreen => Position.X + TextureWidth >= 0 
+                                      && Position.Y + TextureHeight >= 0 
+                                      && Position.X <= _mapWidth 
+                                      && Position.Y <= _mapHeight;
+    private Vector2 _position;
     public Vector2 Position
     {
         get => _position;
         private set
         {
-            _position.X = (value.X < 0) ? 0 : (value.X > _mapWidth - TextureWidth) ? _mapWidth - TextureWidth : value.X;
-            _position.Y = (value.Y < 0) ? 0 : (value.Y > _mapHeight - TextureHeight) ? _mapHeight - TextureHeight : value.Y;
-        
+            _position.X = MathHelper.Clamp(value.X, 0, _mapWidth - TextureWidth);
+            _position.Y = MathHelper.Clamp(value.Y, 0, _mapHeight - TextureHeight);
+
             if (value.X < 0 || value.Y < 0 || value.X > _mapWidth - TextureWidth || value.Y > _mapHeight - TextureHeight)
             {
                 Speed = Vector2.Zero;
@@ -31,16 +33,15 @@ public class SpaceShip : IObject
         }
     }
     
-    public SpaceShip(int mapWidth, int mapHeight ,int imageId, int playerId, Vector2 position,
-        Vector2 speed)
+    public SpaceShip(int mapWidth, int mapHeight, int playerId)
     {
         _mapWidth = mapWidth;
         _mapHeight = mapHeight;
-        ImageId = imageId;
+        ImageId = 0;
         Id = playerId;
-        Position = position;
-        Speed = speed;
-        Collider = new RectangleCollider((int)position.X, (int)position.Y, TextureWidth, TextureHeight);
+        Position = new Vector2(_mapWidth, _mapHeight) * 0.5f;
+        Speed = Vector2.Zero;
+        Collider = new RectangleCollider((int)Position.X, (int)Position.Y, TextureWidth, TextureHeight);
     }
 
     public void Update()

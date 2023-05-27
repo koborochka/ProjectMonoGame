@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -6,19 +7,22 @@ namespace ProjectMonoGame;
 
 public class Asteroid : IObject
 {
+    private readonly Dictionary<int, int> _speedCoefsForAsteroidImagesId = new() { { 1, 2 }, { 2, 3 }, { 3, 5 } };
     private readonly int _mapWidth;
     private readonly int _mapHeight;
     private readonly Texture2D _texture;
     public int ImageId { get; set; }
     public int Id { get; set; }
 
-    public bool IsInBoundsOfScreen =>
-        Position.X + _texture.Width >= 0 && Position.Y + _texture.Height >= 0 && Position.X <= _mapWidth && Position.Y <= _mapHeight;
+    public bool IsInBoundsOfScreen => Position.X + _texture.Width >= 0 
+                                      && Position.Y + _texture.Height >= 0 
+                                      && Position.X <= _mapWidth 
+                                      && Position.Y <= _mapHeight;
 
-    private Vector2 Speed { get; set; }
+    private Vector2 Speed { get; }
     public RectangleCollider Collider { get; set; }
-    //private Vector2 _position;
-    public Vector2 Position { get; set; }
+    public Vector2 Position { get; private set; }
+
 
     public void Update()
     {
@@ -31,19 +35,33 @@ public class Asteroid : IObject
         Collider = new RectangleCollider((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
     }
 
-    public Asteroid(int mapWidth, int mapHeight, int imageId, int id, Vector2 position, Vector2 direction,
-        int speedCoefficient, Texture2D texture)
+    public Asteroid(int mapWidth, int mapHeight, int id, Vector2 playerPosition ,Dictionary<int, Texture2D> textures)
     {
         _mapWidth = mapWidth;
         _mapHeight = mapHeight;
-        ImageId = imageId;
         Id = id;
-        Position = position;
-        //_wasInVisiblePartOfScreen = false; // Инициализация поля
-        //  _position = position; 
-        //IsInBoundsOfScreen = true;
-        Speed = direction * speedCoefficient;
-        _texture = texture;
-        Collider = new RectangleCollider((int)position.X, (int)position.Y, _texture.Width, _texture.Height);
+        ImageId = GetRandomImageIdForAsteroid();
+        _texture = textures[ImageId];
+        Position = GetRandomInitialAsteroidPosition();
+        Speed = Vector2.Normalize(playerPosition - Position) * _speedCoefsForAsteroidImagesId[ImageId];
+        Collider = new RectangleCollider((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
+    }
+    
+    private Vector2 GetRandomInitialAsteroidPosition()
+    {
+        var random = new Random();
+        var randomSideCreated = random.Next(1, 5);
+        return randomSideCreated switch
+        {
+            1 => new Vector2(_mapWidth, random.Next(0, _mapHeight)),
+            2 => new Vector2(random.Next(0, _mapWidth), 0 - _texture.Height),
+            3 => new Vector2(random.Next(0, _mapWidth), _mapHeight),
+            _ => new Vector2(0 - _texture.Width, random.Next(0, _mapHeight))
+        };
+    }
+    private int GetRandomImageIdForAsteroid()
+    {
+        var random = new Random();
+        return random.Next(1, 4);
     }
 }

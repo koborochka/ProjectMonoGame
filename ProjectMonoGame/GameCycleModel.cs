@@ -11,7 +11,6 @@ public class GameCycleModel : IGameplayModel
     public event EventHandler<GameplayEventArgs> Updated;
     public int PlayerId { get; set; }
     public Dictionary<int, IObject> Objects { get; set; }
-
     private const float ConstantAcceleration = 0.06f; 
     private int _currentId ; 
     private Timer _asteroidTimer;
@@ -23,10 +22,7 @@ public class GameCycleModel : IGameplayModel
     public void Initialize()
     {
         Objects = new Dictionary<int, IObject>();
-        //_currentId = 1;
-        var player = new SpaceShip(_mapWidth, _mapHeight, 1, _currentId,
-            new Vector2(_mapWidth / 2, _mapHeight / 2), Vector2.Zero);
-   
+        var player = new SpaceShip(_mapWidth, _mapHeight,_currentId);
         Objects.Add(_currentId, player);
         PlayerId = _currentId;
         _currentId++;
@@ -43,13 +39,9 @@ public class GameCycleModel : IGameplayModel
         foreach (var obj in Objects.Values)
         {
             obj.Update();
-            if (obj is Asteroid)
+            if (obj is Asteroid { IsInBoundsOfScreen: false } asteroid)
             {
-                var asteroid = (Asteroid)obj;
-                if (!asteroid.IsInBoundsOfScreen)
-                {
-                    Objects.Remove(asteroid.Id);
-                }
+                Objects.Remove(asteroid.Id);
             }
         }
         Updated?.Invoke(this, new GameplayEventArgs { Objects = this.Objects });
@@ -75,49 +67,14 @@ public class GameCycleModel : IGameplayModel
 
     private void GenerateAsteroid(object state)
     {
-        var random = new Random();
-        var randomInt = random.Next(1, 5);
-        var initialPosition = GetInitialAsteroidPosition(randomInt);
-        var direction = Vector2.Normalize(Objects[PlayerId].Position - initialPosition);
-        var randomAsteroidNumber = random.Next(2, 5);
-        var asteroid = CreateNewAsteroid(randomAsteroidNumber, _currentId,  initialPosition, direction );
-      //  var randomSetAsteroid = CreateRandomSetAsteroid();
+        var asteroid = CreateRandomSetAsteroid();
         Objects.Add(_currentId, asteroid);
         _currentId++;
     }
-
-    private Vector2 GetInitialAsteroidPosition(int randomInt)
+    
+    private Asteroid CreateRandomSetAsteroid()
     {
-        var random = new Random();
-        switch (randomInt)
-        {
-            case 1:
-                return new Vector2(_mapWidth, random.Next(0, _mapHeight));
-            case 2:
-                return new Vector2(random.Next(0, _mapWidth), 0);
-            case 3:
-                return new Vector2(random.Next(0, _mapWidth), _mapHeight);
-            default:
-                return new Vector2(0, random.Next(0, _mapHeight));
-        }
+        var playerPosition = Objects[PlayerId].Position;
+        return new Asteroid(_mapWidth, _mapHeight, _currentId, playerPosition, _textures);
     }
-
-    private Asteroid CreateNewAsteroid(int imageId,int id, Vector2 initialPosition, Vector2 direction)
-    {
-        var speedCoefficient = GetSpeedCoefficientForAsteroid(imageId);
-        return new Asteroid(_mapWidth, _mapHeight, imageId, id,
-            initialPosition, direction, speedCoefficient, _textures[imageId]);
-    }
-
-    private int GetSpeedCoefficientForAsteroid(int imageId)
-    {
-        return imageId switch
-        {
-            2 => 2,
-            3 => 3,
-            4 => 5,
-            _ => 0
-        };
-    }
-
 }
