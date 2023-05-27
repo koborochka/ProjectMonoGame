@@ -8,13 +8,14 @@ namespace ProjectMonoGame;
 
 public class GameCycleView : Game, IGameplayView
 {
-    private GraphicsDeviceManager _graphics;
+    private readonly GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
  //   private Texture2D _playerImage;
-    private Dictionary<int, IObject> _objects = new Dictionary<int, IObject>();
-    private readonly Dictionary<int, Texture2D> _textures = new Dictionary<int, Texture2D>();
+    private Dictionary<int, IObject> _objects = new ();
+    private readonly Dictionary<int, Texture2D> _textures = new ();
     public event EventHandler CycleFinished;
     public event EventHandler<ControlsEventArgs> PlayerMoved;
+    public event EventHandler<TextureEventArgs> TexturesDownloaded;
     
     public GameCycleView()
     {
@@ -37,9 +38,11 @@ public class GameCycleView : Game, IGameplayView
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _textures.Add(1, Content.Load<Texture2D>("space_ship"));
-        _textures.Add(2, Content.Load<Texture2D>("asteroid_2"));
-        _textures.Add(3, Content.Load<Texture2D>("asteroid_1"));
+        _textures.Add(2, Content.Load<Texture2D>("asteroid_1"));
+        _textures.Add(3, Content.Load<Texture2D>("asteroid_2"));
         _textures.Add(4, Content.Load<Texture2D>("asteroid_3"));
+        
+        TexturesDownloaded?.Invoke(this, new TextureEventArgs(){Textures = _textures});
     }
 
     public void LoadGameCycleParameters(Dictionary<int, IObject> objects)

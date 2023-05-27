@@ -17,6 +17,7 @@ public class GameplayPresenter
 
         _gameplayView.CycleFinished += ViewModelUpdate;
         _gameplayView.PlayerMoved += ViewModelMovePlayer;
+        _gameplayView.TexturesDownloaded += ViewTexturesDownloaded;
         _gameplayModel.Updated += ModelViewUpdate;
         
         _gameplayModel.Initialize(); 
@@ -35,6 +36,11 @@ public class GameplayPresenter
     private void ModelViewUpdate(object sender, GameplayEventArgs e)
     {
         _gameplayView.LoadGameCycleParameters(e.Objects);
+    }
+
+    private void ViewTexturesDownloaded(object sender, TextureEventArgs e)
+    {
+        _gameplayModel.LoadTextures(e.Textures);
     }
 
     private void ViewModelUpdate(object sender, EventArgs e)

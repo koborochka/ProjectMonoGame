@@ -15,6 +15,7 @@ public class GameCycleModel : IGameplayModel
     private const float ConstantAcceleration = 0.06f; 
     private int _currentId; 
     private Timer _asteroidTimer;
+    private Dictionary<int, Texture2D> _textures = new ();
     private readonly int _mapWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
     private readonly int _mapHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
     
@@ -23,17 +24,18 @@ public class GameCycleModel : IGameplayModel
     {
         Objects = new Dictionary<int, IObject>();
         _currentId = 1;
-        var player = new SpaceShip(_mapWidth, _mapHeight)
-        {
-            Position = new Vector2 (_mapWidth / 2,_mapHeight / 2),
-            Id = _currentId,
-            ImageId = 1,
-            Speed = Vector2.Zero
-        };
+        var player = new SpaceShip(_mapWidth, _mapHeight, 1, _currentId,
+            new Vector2(_mapWidth / 2, _mapHeight / 2), Vector2.Zero);
+   
         Objects.Add(_currentId, player);
         PlayerId = _currentId;
         _currentId++;
         _asteroidTimer = new Timer(GenerateAsteroid, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(1));
+    }
+    
+    public void LoadTextures(Dictionary<int, Texture2D> textures)
+    {
+        _textures = textures;        
     }
 
     public void Update()
@@ -70,9 +72,8 @@ public class GameCycleModel : IGameplayModel
         var initialPosition = GetInitialAsteroidPosition(randomInt);
         var direction = Vector2.Normalize(Objects[PlayerId].Position - initialPosition);
         var randomAsteroidNumber = random.Next(2, 5);
-        var asteroidId = _currentId;
-        var asteroid = CreateNewAsteroid(randomAsteroidNumber, asteroidId, direction, initialPosition);
-        Objects.Add(asteroidId, asteroid);
+        var asteroid = CreateNewAsteroid(randomAsteroidNumber, _currentId,  initialPosition, direction );
+        Objects.Add(_currentId, asteroid);
         _currentId++;
     }
 
@@ -92,18 +93,11 @@ public class GameCycleModel : IGameplayModel
         }
     }
 
-    private Asteroid CreateNewAsteroid(int imageId,int id, Vector2 direction, Vector2 initialPosition)
+    private Asteroid CreateNewAsteroid(int imageId,int id, Vector2 initialPosition, Vector2 direction)
     {
-        var asteroid = new Asteroid
-        {
-            Id = id,
-            ImageId = imageId,
-            Direction = direction,
-            Speed = direction * GetSpeedCoefficientForAsteroid(imageId),
-            Position = initialPosition
-        };
-
-        return asteroid;
+        var speedCoefficient = GetSpeedCoefficientForAsteroid(imageId);
+        return new Asteroid(_mapWidth, _mapHeight, imageId, id,
+            initialPosition, direction, speedCoefficient, _textures[imageId]);
     }
 
     private int GetSpeedCoefficientForAsteroid(int imageId)

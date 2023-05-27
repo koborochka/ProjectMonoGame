@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectMonoGame;
 
@@ -10,6 +11,7 @@ public interface IGameplayModel
 
     void Update();
     void MovePlayer(List<Direction> direction);
+    void LoadTextures(Dictionary<int, Texture2D> textures);
     Dictionary<int, IObject> Objects { get; set; }
     void Initialize();    
     int PlayerId { get; set; }
