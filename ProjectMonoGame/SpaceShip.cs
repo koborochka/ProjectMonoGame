@@ -17,6 +17,7 @@ public class SpaceShip : IObject
                                       && Position.Y + TextureHeight >= 0 
                                       && Position.X <= _mapWidth 
                                       && Position.Y <= _mapHeight;
+    public RectangleCollider Collider { get; set; }
     private Vector2 _position;
     public Vector2 Position
     {
@@ -50,7 +51,6 @@ public class SpaceShip : IObject
         MoveCollider(Position);
     }
     
-    public RectangleCollider Collider { get; set; }
     public void MoveCollider(Vector2 newPos)
     {
         Collider = new RectangleCollider((int)Position.X, (int)Position.Y, TextureWidth, TextureHeight);

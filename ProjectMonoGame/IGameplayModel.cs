@@ -26,6 +26,10 @@ public interface IGameplayModel
 
 public class GameplayEventArgs : EventArgs
 {
-    public Dictionary<int, IObject> Objects { get; set; }
+    public Dictionary<int, IObject> Objects { get; }
+    public GameplayEventArgs(Dictionary<int, IObject> objects)
+    {
+        Objects = objects;
+    }
 }
 

@@ -17,10 +17,18 @@ public interface IGameplayView
 
 public class ControlsEventArgs : EventArgs
 {
-    public List<IGameplayModel.Direction> Directions { get; set; }
+    public List<IGameplayModel.Direction> Directions { get; }
+    public ControlsEventArgs(List<IGameplayModel.Direction> directions)
+    {
+        Directions = directions;
+    }
 }
 
 public class TextureEventArgs : EventArgs
 {
-    public Dictionary<int, Texture2D> Textures { get; set; }
+    public Dictionary<int, Texture2D> Textures { get; }
+    public TextureEventArgs(Dictionary<int, Texture2D> textures)
+    {
+        Textures = textures;
+    }
 }

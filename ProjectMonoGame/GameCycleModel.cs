@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectMonoGame;
 
-public class GameCycleModel : IGameplayModel
+public partial class GameCycleModel : IGameplayModel
 {
     public event EventHandler<GameplayEventArgs> Updated;
     public int PlayerId { get; set; }
@@ -22,7 +22,7 @@ public class GameCycleModel : IGameplayModel
     public void Initialize()
     {
         Objects = new Dictionary<int, IObject>();
-        var player = new SpaceShip(_mapWidth, _mapHeight,_currentId);
+        var player = new SpaceShip(_mapWidth, _mapHeight, _currentId);
         Objects.Add(_currentId, player);
         PlayerId = _currentId;
         _currentId++;
@@ -43,8 +43,16 @@ public class GameCycleModel : IGameplayModel
             {
                 Objects.Remove(asteroid.Id);
             }
+            
+            var player = Objects[PlayerId];
+            if (obj == player) continue;
+            var solid = (ISolid)obj;
+            if (RectangleCollider.IsCollided(solid.Collider, player.Collider))
+            {
+                Objects.Remove(obj.Id);
+            }
         }
-        Updated?.Invoke(this, new GameplayEventArgs { Objects = this.Objects });
+        Updated?.Invoke(this, new GameplayEventArgs (Objects));
     }
 
     public void MovePlayer(List<IGameplayModel.Direction> directions)
@@ -67,14 +75,9 @@ public class GameCycleModel : IGameplayModel
 
     private void GenerateAsteroid(object state)
     {
-        var asteroid = CreateRandomSetAsteroid();
+        var playerPosition = Objects[PlayerId].Position;
+        var asteroid = new Asteroid(_mapWidth, _mapHeight, _currentId, playerPosition, _textures);
         Objects.Add(_currentId, asteroid);
         _currentId++;
-    }
-    
-    private Asteroid CreateRandomSetAsteroid()
-    {
-        var playerPosition = Objects[PlayerId].Position;
-        return new Asteroid(_mapWidth, _mapHeight, _currentId, playerPosition, _textures);
     }
 }

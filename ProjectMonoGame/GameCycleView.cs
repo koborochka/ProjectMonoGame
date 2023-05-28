@@ -41,7 +41,7 @@ public class GameCycleView : Game, IGameplayView
         _textures.Add(2, Content.Load<Texture2D>("asteroid_2"));
         _textures.Add(3, Content.Load<Texture2D>("asteroid_3"));
         
-        TexturesDownloaded?.Invoke(this, new TextureEventArgs{Textures = _textures});
+        TexturesDownloaded?.Invoke(this, new TextureEventArgs(_textures));
     }
 
     public void LoadGameCycleParameters(Dictionary<int, IObject> objects)
@@ -83,7 +83,7 @@ public class GameCycleView : Game, IGameplayView
             }
         }
         
-        PlayerMoved?.Invoke(this, new ControlsEventArgs { Directions = directions });
+        PlayerMoved?.Invoke(this, new ControlsEventArgs (directions));
         
         base.Update(gameTime);
         
