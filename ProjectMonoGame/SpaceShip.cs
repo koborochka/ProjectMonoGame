@@ -8,8 +8,8 @@ public class SpaceShip : IObject
 {
     private readonly int _mapWidth;
     private readonly int _mapHeight;
-    private const int TextureWidth = 50;
-    private const int TextureHeight = 50;
+    private const int TextureWidth = 70;
+    private const int TextureHeight = 39;
     public int ImageId { get; set; }
     public int Id { get; set; }
     public Vector2 Speed { get; set; }

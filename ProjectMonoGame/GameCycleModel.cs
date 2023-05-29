@@ -30,9 +30,12 @@ public partial class GameCycleModel : IGameplayModel
         _asteroidTimer = new Timer(GenerateAsteroid, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
         _spaceCatTimer = new Timer(GenerateSpaceCat, null, TimeSpan.FromSeconds(7), TimeSpan.FromSeconds(5));
     }
-    
-    public void LoadTextures(Dictionary<int, Texture2D> textures) => _textures = textures;        
-    
+
+    public void LoadTextures(Dictionary<int, Texture2D> textures)
+    {
+        _textures = textures;
+    }
+
     public void Update()
     {
         foreach (var obj in Objects.Values)

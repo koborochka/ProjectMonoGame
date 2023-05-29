@@ -12,6 +12,9 @@ public class GameCycleView : Game, IGameplayView
     private SpriteBatch _spriteBatch;
     private Dictionary<int, IObject> _objects = new ();
     private readonly Dictionary<int, Texture2D> _textures = new ();
+    private int _backgroundImageId;
+    private int _mapWidth;
+    private int _mapHeight;
     public event EventHandler CycleFinished;
     public event EventHandler<ControlsEventArgs> PlayerMoved;
     public event EventHandler<TextureEventArgs> TexturesDownloaded;
@@ -25,8 +28,10 @@ public class GameCycleView : Game, IGameplayView
 
     protected override void Initialize()
     {
-        _graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-        _graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+        _mapWidth = GraphicsDevice.DisplayMode.Width;
+        _mapHeight = GraphicsDevice.DisplayMode.Height;
+        _graphics.PreferredBackBufferWidth = _mapWidth;
+        _graphics.PreferredBackBufferHeight = _mapHeight;
         _graphics.IsFullScreen = true;
         _graphics.ApplyChanges();
         
@@ -41,6 +46,8 @@ public class GameCycleView : Game, IGameplayView
         _textures.Add(2, Content.Load<Texture2D>("asteroid_2"));
         _textures.Add(3, Content.Load<Texture2D>("asteroid_3"));
         _textures.Add(4, Content.Load<Texture2D>("space_cat"));
+        _backgroundImageId = 5;
+        _textures.Add(_backgroundImageId, Content.Load<Texture2D>("background"));
 
         TexturesDownloaded?.Invoke(this, new TextureEventArgs(_textures));
     }
@@ -96,6 +103,10 @@ public class GameCycleView : Game, IGameplayView
         GraphicsDevice.Clear(Color.Black);
         base.Draw(gameTime);
         _spriteBatch.Begin();
+     
+        var destinationRectangle = new Rectangle(0, 0, _mapWidth, _mapHeight);
+        _spriteBatch.Draw(_textures[_backgroundImageId], destinationRectangle, Color.White);
+
         foreach (var obj in _objects.Values)
         {
             _spriteBatch.Draw(_textures[obj.ImageId],  obj.Position, Color.White);
