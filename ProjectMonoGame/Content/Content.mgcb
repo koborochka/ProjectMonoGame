@@ -49,6 +49,18 @@
 /processorParam:TextureFormat=Color
 /build:asteroid_3.png
 
+#begin space_cat.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:space_cat.png
+
 #begin space_ship.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -14,6 +14,7 @@ public partial class GameCycleModel : IGameplayModel
     private const float ConstantAcceleration = 0.06f; 
     private int _currentId ; 
     private Timer _asteroidTimer;
+    private Timer _spaceCatTimer;
     private Dictionary<int, Texture2D> _textures = new ();
     private readonly int _mapWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
     private readonly int _mapHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -26,24 +27,22 @@ public partial class GameCycleModel : IGameplayModel
         Objects.Add(_currentId, player);
         PlayerId = _currentId;
         _currentId++;
-        _asteroidTimer = new Timer(GenerateAsteroid, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(1));
+        _asteroidTimer = new Timer(GenerateAsteroid, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
+        _spaceCatTimer = new Timer(GenerateSpaceCat, null, TimeSpan.FromSeconds(7), TimeSpan.FromSeconds(5));
     }
     
-    public void LoadTextures(Dictionary<int, Texture2D> textures)
-    {
-        _textures = textures;        
-    }
-
+    public void LoadTextures(Dictionary<int, Texture2D> textures) => _textures = textures;        
+    
     public void Update()
     {
         foreach (var obj in Objects.Values)
         {
             obj.Update();
             if (obj is Asteroid { IsInBoundsOfScreen: false } asteroid)
-            {
                 Objects.Remove(asteroid.Id);
-            }
-            
+            else if (obj is SpaceCat { IsInBoundsOfScreen: false } spaceCat)
+                Objects.Remove(spaceCat.Id);
+
             var player = Objects[PlayerId];
             if (obj == player) continue;
             var solid = (ISolid)obj;
@@ -52,7 +51,7 @@ public partial class GameCycleModel : IGameplayModel
                 Objects.Remove(obj.Id);
             }
         }
-        Updated?.Invoke(this, new GameplayEventArgs (Objects));
+        Updated?.Invoke(this, new GameplayEventArgs(Objects));
     }
 
     public void MovePlayer(List<IGameplayModel.Direction> directions)
@@ -78,6 +77,14 @@ public partial class GameCycleModel : IGameplayModel
         var playerPosition = Objects[PlayerId].Position;
         var asteroid = new Asteroid(_mapWidth, _mapHeight, _currentId, playerPosition, _textures);
         Objects.Add(_currentId, asteroid);
+        _currentId++;
+    }
+    
+    private void GenerateSpaceCat(object state)
+    {
+        var playerPosition = Objects[PlayerId].Position;
+        var spaceCat = new SpaceCat(_mapWidth, _mapHeight, _currentId, playerPosition, _textures);
+        Objects.Add(_currentId, spaceCat);
         _currentId++;
     }
 }

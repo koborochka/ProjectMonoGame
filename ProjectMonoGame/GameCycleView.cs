@@ -40,7 +40,8 @@ public class GameCycleView : Game, IGameplayView
         _textures.Add(1, Content.Load<Texture2D>("asteroid_1"));
         _textures.Add(2, Content.Load<Texture2D>("asteroid_2"));
         _textures.Add(3, Content.Load<Texture2D>("asteroid_3"));
-        
+        _textures.Add(4, Content.Load<Texture2D>("space_cat"));
+
         TexturesDownloaded?.Invoke(this, new TextureEventArgs(_textures));
     }
 
