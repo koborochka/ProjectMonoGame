@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectMonoGame;
 
-public class SpaceShip : IObject
+public class SpaceShip : IObject, IShimmering
 {
     private readonly int _mapWidth;
     private readonly int _mapHeight;
@@ -19,6 +19,7 @@ public class SpaceShip : IObject
                                       && Position.Y <= _mapHeight;
     public RectangleCollider Collider { get; set; }
     private Vector2 _position;
+    public bool IsShimmering { get; set; }
     public Vector2 Position
     {
         get => _position;
@@ -43,6 +44,7 @@ public class SpaceShip : IObject
         Position = new Vector2(_mapWidth, _mapHeight) * 0.5f;
         Speed = Vector2.Zero;
         Collider = new RectangleCollider((int)Position.X, (int)Position.Y, TextureWidth, TextureHeight);
+        IsShimmering = false;
     }
 
     public void Update()

@@ -109,7 +109,22 @@ public class GameCycleView : Game, IGameplayView
 
         foreach (var obj in _objects.Values)
         {
-            _spriteBatch.Draw(_textures[obj.ImageId],  obj.Position, Color.White);
+            if (obj is SpaceShip)
+            {
+                var player = obj as IShimmering;
+                if (player.IsShimmering)
+                {
+                    _spriteBatch.Draw(_textures[2],  obj.Position, Color.White);
+                }
+                else
+                {
+                    _spriteBatch.Draw(_textures[obj.ImageId],  obj.Position, Color.White);
+                }
+            }
+            else
+            {
+                _spriteBatch.Draw(_textures[obj.ImageId],  obj.Position, Color.White);
+            }
         }  	
         _spriteBatch.End();  
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 
 namespace ProjectMonoGame;
 
@@ -6,7 +7,7 @@ public class GameplayPresenter
 {
     private IGameplayView _gameplayView = null;
     private IGameplayModel _gameplayModel = null;
-
+    private GameTime _gameTime = new();
     public GameplayPresenter(
         IGameplayView gameplayView,
         IGameplayModel gameplayModel
@@ -45,6 +46,6 @@ public class GameplayPresenter
 
     private void ViewModelUpdate(object sender, EventArgs e)
     {
-        _gameplayModel.Update();
+        _gameplayModel.Update(_gameTime);
     }
 }

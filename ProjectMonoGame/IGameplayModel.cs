@@ -9,7 +9,7 @@ public interface IGameplayModel
 {
     event EventHandler<GameplayEventArgs> Updated;
 
-    void Update();
+    void Update(GameTime gameTime);
     void MovePlayer(List<Direction> direction);
     void LoadTextures(Dictionary<int, Texture2D> textures);
     Dictionary<int, IObject> Objects { get; set; }
