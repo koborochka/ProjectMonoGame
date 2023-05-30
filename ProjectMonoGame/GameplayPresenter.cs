@@ -35,7 +35,7 @@ public class GameplayPresenter
 
     private void ModelViewUpdate(object sender, GameplayEventArgs e)
     {
-        _gameplayView.LoadGameCycleParameters(e.Objects);
+        _gameplayView.LoadGameCycleParameters(e.Objects, e.PlayerId);
     }
 
     private void ViewTexturesDownloaded(object sender, TextureEventArgs e)

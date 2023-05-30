@@ -5,11 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectMonoGame;
 
-public class SpaceCat : IObject
+public class SpaceCat : IEntity
 {
     private readonly int _mapWidth;
     private readonly int _mapHeight;
     private readonly Texture2D _texture;
+    private Vector2 Speed { get; }
     public int ImageId { get; set; } = 4;
     public int Id { get; set; }
     public bool IsInBoundsOfScreen => Position.X + _texture.Width >= 0 
@@ -17,7 +18,6 @@ public class SpaceCat : IObject
                                       && Position.X <= _mapWidth 
                                       && Position.Y <= _mapHeight;
 
-    private Vector2 Speed { get; }
     public RectangleCollider Collider { get; set; }
     public Vector2 Position { get; private set; }
 

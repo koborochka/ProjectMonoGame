@@ -11,7 +11,7 @@ public interface ISolid
 
 public class RectangleCollider
 {
-    public Rectangle Boundary { get; }
+    private Rectangle Boundary { get; }
     
     public RectangleCollider(int x, int y, int width, int height)
     {

@@ -11,7 +11,7 @@ public interface IGameplayView
     event EventHandler<ControlsEventArgs> PlayerMoved;
     event EventHandler<TextureEventArgs> TexturesDownloaded;
 
-    void LoadGameCycleParameters(Dictionary<int, IObject> objects);
+    void LoadGameCycleParameters(Dictionary<int, IEntity> objects, int playerId);
     void Run();
 }
 

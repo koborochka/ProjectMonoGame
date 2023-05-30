@@ -4,13 +4,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectMonoGame;
 
-public class SpaceShip : IObject
+public class SpaceShip : IEntity
 {
     private readonly int _mapWidth;
     private readonly int _mapHeight;
     private const int TextureWidth = 70;
     private const int TextureHeight = 39;
-    public int ImageId { get; set; }
+    private Vector2 _position;
+    public int ImageId { get; set; } = 0;
     public int Id { get; set; }
     public Vector2 Speed { get; set; }
     public bool IsInBoundsOfScreen => Position.X + TextureWidth >= 0 
@@ -18,7 +19,8 @@ public class SpaceShip : IObject
                                       && Position.X <= _mapWidth 
                                       && Position.Y <= _mapHeight;
     public RectangleCollider Collider { get; set; }
-    private Vector2 _position;
+    public int CatCaught { get; set; }
+    public int HealthPoints { get; set; } = 10;
     public Vector2 Position
     {
         get => _position;
@@ -38,7 +40,6 @@ public class SpaceShip : IObject
     {
         _mapWidth = mapWidth;
         _mapHeight = mapHeight;
-        ImageId = 0;
         Id = playerId;
         Position = new Vector2(_mapWidth, _mapHeight) * 0.5f;
         Speed = Vector2.Zero;

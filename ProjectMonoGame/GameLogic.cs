@@ -5,7 +5,7 @@ namespace ProjectMonoGame;
 
 public partial class GameCycleModel
 {
-    private void CheckCollision(IEnumerable<IObject> currentEntities)
+    private void CheckCollision(IEnumerable<IEntity> currentEntities)
     {
         var player = Objects[PlayerId];
         player.Update();
@@ -20,7 +20,7 @@ public partial class GameCycleModel
             }
         }
 
-        Updated.Invoke(this, new GameplayEventArgs(Objects));
+      //  Updated.Invoke(this, new GameplayEventArgs(Objects));
     }
 }
 

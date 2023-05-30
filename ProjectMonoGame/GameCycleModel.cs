@@ -10,7 +10,7 @@ public partial class GameCycleModel : IGameplayModel
 {
     public event EventHandler<GameplayEventArgs> Updated;
     public int PlayerId { get; set; }
-    public Dictionary<int, IObject> Objects { get; set; }
+    public Dictionary<int, IEntity> Objects { get; set; }
     private const float ConstantAcceleration = 0.06f; 
     private int _currentId ; 
     private Timer _asteroidTimer;
@@ -22,7 +22,7 @@ public partial class GameCycleModel : IGameplayModel
 
     public void Initialize()
     {
-        Objects = new Dictionary<int, IObject>();
+        Objects = new Dictionary<int, IEntity>();
         var player = new SpaceShip(_mapWidth, _mapHeight, _currentId);
         Objects.Add(_currentId, player);
         PlayerId = _currentId;
@@ -46,15 +46,22 @@ public partial class GameCycleModel : IGameplayModel
             else if (obj is SpaceCat { IsInBoundsOfScreen: false } spaceCat)
                 Objects.Remove(spaceCat.Id);
 
-            var player = Objects[PlayerId];
+            var player = (SpaceShip)Objects[PlayerId];
             if (obj == player) continue;
             var solid = (ISolid)obj;
             if (RectangleCollider.IsCollided(solid.Collider, player.Collider))
             {
                 Objects.Remove(obj.Id);
+                if (obj is SpaceCat)
+                    player.CatCaught += 1;
+                else
+                {
+                    var currentAsteroid = (Asteroid)obj;
+                    player.HealthPoints -= currentAsteroid.GetDamageByImageId(currentAsteroid.ImageId);
+                }
             }
         }
-        Updated?.Invoke(this, new GameplayEventArgs(Objects));
+        Updated?.Invoke(this, new GameplayEventArgs(Objects, PlayerId));
     }
 
     public void MovePlayer(List<IGameplayModel.Direction> directions)

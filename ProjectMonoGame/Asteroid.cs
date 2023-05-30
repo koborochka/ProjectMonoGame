@@ -5,9 +5,10 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectMonoGame;
 
-public class Asteroid : IObject
+public class Asteroid : IEntity
 {
-    private readonly Dictionary<int, int> _speedCoefsForAsteroidImagesId = new() { { 1, 2 }, { 2, 3 }, { 3, 5 } };
+    private readonly Dictionary<int, int> _speedCoefsForAsteroidByImagesId = new() { { 1, 2 }, { 2, 3 }, { 3, 5 } };
+    private readonly Dictionary<int, int> _asteroidDamageByImageId = new() { { 1, 3 }, { 2, 2 }, { 3, 1 } };
     private readonly int _mapWidth;
     private readonly int _mapHeight;
     private readonly Texture2D _texture;
@@ -43,8 +44,13 @@ public class Asteroid : IObject
         ImageId = GetRandomImageIdForAsteroid();
         _texture = textures[ImageId];
         Position = GetRandomInitialAsteroidPosition();
-        Speed = Vector2.Normalize(playerPosition - Position) * _speedCoefsForAsteroidImagesId[ImageId];
+        Speed = Vector2.Normalize(playerPosition - Position) * _speedCoefsForAsteroidByImagesId[ImageId];
         Collider = new RectangleCollider((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
+    }
+
+    public int GetDamageByImageId(int imageId)
+    {
+        return _asteroidDamageByImageId[imageId];
     }
     
     private Vector2 GetRandomInitialAsteroidPosition()

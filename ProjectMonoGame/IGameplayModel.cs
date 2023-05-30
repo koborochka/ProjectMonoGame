@@ -12,7 +12,7 @@ public interface IGameplayModel
     void Update();
     void MovePlayer(List<Direction> direction);
     void LoadTextures(Dictionary<int, Texture2D> textures);
-    Dictionary<int, IObject> Objects { get; set; }
+    Dictionary<int, IEntity> Objects { get; set; }
     void Initialize();    
     int PlayerId { get; set; }
     public enum Direction : byte
@@ -26,10 +26,13 @@ public interface IGameplayModel
 
 public class GameplayEventArgs : EventArgs
 {
-    public Dictionary<int, IObject> Objects { get; }
-    public GameplayEventArgs(Dictionary<int, IObject> objects)
+    public Dictionary<int, IEntity> Objects { get; }
+    public int PlayerId { get; }
+
+    public GameplayEventArgs(Dictionary<int, IEntity> objects, int playerId)
     {
         Objects = objects;
+        PlayerId = playerId;
     }
 }
 
