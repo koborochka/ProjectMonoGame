@@ -10,8 +10,10 @@ public interface IGameplayView
     event EventHandler CycleFinished;
     event EventHandler<ControlsEventArgs> PlayerMoved;
     event EventHandler<TextureEventArgs> TexturesDownloaded;
+    event EventHandler StartNewGame;
+    event EventHandler ReturnedToMenu;
 
-    void LoadGameCycleParameters(Dictionary<int, IEntity> objects, int playerId);
+    void LoadGameCycleParameters(Dictionary<int, IEntity> objects, int playerId, GameState currentGameState);
     void Run();
 }
 

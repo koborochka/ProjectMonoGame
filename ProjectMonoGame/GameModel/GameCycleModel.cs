@@ -1,26 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using ProjectMonoGame.Objects;
 
-namespace ProjectMonoGame;
+namespace ProjectMonoGame.GameModel;
 
 public partial class GameCycleModel : IGameplayModel
 {
     public event EventHandler<GameplayEventArgs> Updated;
     public int PlayerId { get; set; }
     public Dictionary<int, IEntity> Objects { get; set; }
+    private Dictionary<int, IEntity> _buttons;
+    private Dictionary<int, Texture2D> _textures;
+    
+    private GameState _currentGameState = new GameState();
+
     private const float ConstantAcceleration = 0.06f; 
-    private int _currentId ; 
+    
+    private int _currentId ;
+    
     private Timer _asteroidTimer;
     private Timer _spaceCatTimer;
-    private Dictionary<int, Texture2D> _textures = new ();
+    
     private readonly int _mapWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
     private readonly int _mapHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-    
 
+    public void LoadTextures(Dictionary<int, Texture2D> textures)
+    {
+        _textures = textures;
+    }
+
+    public void StopGenerateObjects()
+    {
+        _asteroidTimer.Dispose();
+        _spaceCatTimer.Dispose();
+    }
+
+    public void StartNewGame()
+    {
+        _currentGameState.State = State.Game;
+        Initialize();
+    }
+    
     public void Initialize()
+    {
+        switch (_currentGameState.State)
+        {
+            case State.Game:
+                InitializeGame();
+                break;
+            
+            case State.Menu:
+                InitializeMenu();
+                break;
+        }
+    }
+
+    private void InitializeGame()
     {
         Objects = new Dictionary<int, IEntity>();
         var player = new SpaceShip(_mapWidth, _mapHeight, _currentId);
@@ -30,13 +70,44 @@ public partial class GameCycleModel : IGameplayModel
         _asteroidTimer = new Timer(GenerateAsteroid, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
         _spaceCatTimer = new Timer(GenerateSpaceCat, null, TimeSpan.FromSeconds(7), TimeSpan.FromSeconds(5));
     }
-
-    public void LoadTextures(Dictionary<int, Texture2D> textures)
+    
+    private void InitializeMenu()
     {
-        _textures = textures;
+        var startGameButtonPosition = new Vector2(30, 515);
+        
+        var startGameButton = new Button(1, startGameButtonPosition, 300, 
+            40, "Start new game", 0);
+        
+        var exitButton = new Button(
+            3, startGameButtonPosition + new Vector2(0, 80), 
+            80, 40, "Exit", 1);
+        
+        _buttons = new Dictionary<int, IEntity>
+        {
+            {0, startGameButton},
+            {1, exitButton}
+        };
+        
+        UpdateMenu();
     }
 
     public void Update()
+    {
+        switch (_currentGameState.State)
+        {
+            case State.Game:
+                UpdateGame();
+                if (_currentGameState.State == State.Menu)
+                    UpdateMenu();
+                break;
+            
+            case State.Menu:
+                UpdateMenu();
+                break;
+        }
+    }
+
+    private void UpdateGame()
     {
         foreach (var obj in Objects.Values)
         {
@@ -61,7 +132,16 @@ public partial class GameCycleModel : IGameplayModel
                 }
             }
         }
-        Updated?.Invoke(this, new GameplayEventArgs(Objects, PlayerId));
+
+        Updated?.Invoke(this, new GameplayEventArgs(Objects, PlayerId, _currentGameState));
+    }
+    private void UpdateMenu()
+    {
+        var mouseState = Mouse.GetState();
+        foreach (var button in _buttons.Values.Cast<Button>())
+            button.Update(mouseState);
+        
+        Updated?.Invoke(this, new GameplayEventArgs(_buttons, PlayerId, _currentGameState));
     }
 
     public void MovePlayer(List<IGameplayModel.Direction> directions)
@@ -84,17 +164,19 @@ public partial class GameCycleModel : IGameplayModel
 
     private void GenerateAsteroid(object state)
     {
-        var playerPosition = Objects[PlayerId].Position;
-        var asteroid = new Asteroid(_mapWidth, _mapHeight, _currentId, playerPosition, _textures);
-        Objects.Add(_currentId, asteroid);
-        _currentId++;
+        GenerateObject<Asteroid>();
     }
-    
+
     private void GenerateSpaceCat(object state)
     {
+        GenerateObject<SpaceCat>();
+    }
+    
+    private void GenerateObject<T>() where T : IEntity
+    {
         var playerPosition = Objects[PlayerId].Position;
-        var spaceCat = new SpaceCat(_mapWidth, _mapHeight, _currentId, playerPosition, _textures);
-        Objects.Add(_currentId, spaceCat);
+        var obj = (T)Activator.CreateInstance(typeof(T), _mapWidth, _mapHeight, _currentId, playerPosition, _textures);
+        Objects.Add(_currentId, obj);
         _currentId++;
     }
 }

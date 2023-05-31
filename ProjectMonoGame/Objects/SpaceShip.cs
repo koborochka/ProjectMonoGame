@@ -1,8 +1,6 @@
-using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
-namespace ProjectMonoGame;
+namespace ProjectMonoGame.Objects;
 
 public class SpaceShip : IEntity
 {
@@ -14,10 +12,6 @@ public class SpaceShip : IEntity
     public int ImageId { get; set; } = 0;
     public int Id { get; set; }
     public Vector2 Speed { get; set; }
-    public bool IsInBoundsOfScreen => Position.X + TextureWidth >= 0 
-                                      && Position.Y + TextureHeight >= 0 
-                                      && Position.X <= _mapWidth 
-                                      && Position.Y <= _mapHeight;
     public RectangleCollider Collider { get; set; }
     public int CatCaught { get; set; }
     public int HealthPoints { get; set; } = 10;

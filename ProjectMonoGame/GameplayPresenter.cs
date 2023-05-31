@@ -4,8 +4,8 @@ namespace ProjectMonoGame;
 
 public class GameplayPresenter
 {
-    private IGameplayView _gameplayView = null;
-    private IGameplayModel _gameplayModel = null;
+    private readonly IGameplayView _gameplayView;
+    private readonly IGameplayModel _gameplayModel;
 
     public GameplayPresenter(
         IGameplayView gameplayView,
@@ -18,6 +18,8 @@ public class GameplayPresenter
         _gameplayView.CycleFinished += ViewModelUpdate;
         _gameplayView.PlayerMoved += ViewModelMovePlayer;
         _gameplayView.TexturesDownloaded += ViewTexturesDownloaded;
+        _gameplayView.StartNewGame += ViewModelStartNewGame;
+        _gameplayView.ReturnedToMenu += ViewModelReturnedToMenu;
         _gameplayModel.Updated += ModelViewUpdate;
         
         _gameplayModel.Initialize(); 
@@ -35,7 +37,7 @@ public class GameplayPresenter
 
     private void ModelViewUpdate(object sender, GameplayEventArgs e)
     {
-        _gameplayView.LoadGameCycleParameters(e.Objects, e.PlayerId);
+        _gameplayView.LoadGameCycleParameters(e.Objects, e.PlayerId, e.CurrentGameState);
     }
 
     private void ViewTexturesDownloaded(object sender, TextureEventArgs e)
@@ -46,5 +48,14 @@ public class GameplayPresenter
     private void ViewModelUpdate(object sender, EventArgs e)
     {
         _gameplayModel.Update();
+    }
+    private void ViewModelStartNewGame(object sender, EventArgs e)
+    {
+        _gameplayModel.StartNewGame();
+    }
+
+    private void ViewModelReturnedToMenu(object sender, EventArgs e)
+    {
+        _gameplayModel.StopGenerateObjects();
     }
 }
