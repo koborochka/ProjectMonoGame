@@ -49,10 +49,12 @@ public partial class GameCycleView
         DrawButton(_objects[1] as Button);
         var menuCatImage = _textures[_menuCatImageId];
         _spriteBatch.Draw(menuCatImage,new Vector2(_mapWidth -menuCatImage.Width, _mapHeight - menuCatImage.Height) / 2, Color.White);
-        _spriteBatch.DrawString(_font, "Собирай котиков и уклоняйся от астероидов!",
+        _spriteBatch.DrawString(_font, "Собирай котиков и уклоняйся от астероидов! ",
             new Vector2(_mapWidth / 3, 80), Color.Orchid);
-        _spriteBatch.DrawString(_font, "Управление клавишами A,S,D,W",
+        _spriteBatch.DrawString(_font, "Управление клавишами W,A,S,D",
             new Vector2(_mapWidth / 3 + 50, _mapHeight - 150), Color.Plum);
+        _spriteBatch.DrawString(_font, $"Предыдущий результат : {_currentGameState.CatsCollectedCount}",
+            new Vector2(_mapWidth / 3 + 130, 150), Color.Orchid);
         _spriteBatch.End();
     }
     

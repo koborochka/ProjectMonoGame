@@ -67,6 +67,7 @@ public class GameCycleModel : IGameplayModel
 
         _asteroidTicker = 0;
         _spaceCatTicker = 0;
+        _currentGameState.CatsCollectedCount = 0;
     }
     
     private void InitializeMenu()
@@ -117,7 +118,10 @@ public class GameCycleModel : IGameplayModel
             {
                 Objects.Remove(obj.Id);
                 if (obj is SpaceCat)
+                {
                     player.CatCaught += 1;
+                    _currentGameState.CatsCollectedCount += 1;
+                }
                 else
                 {
                     var currentAsteroid = (Asteroid)obj;

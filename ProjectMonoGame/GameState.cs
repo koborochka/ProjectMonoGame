@@ -8,9 +8,13 @@ public enum State : byte
 
 public class GameState
 {
-    public State State { get; set; }
+    
     public GameState()
     {
         State = State.Menu;
+        CatsCollectedCount = 0;
     }
+    public int CatsCollectedCount { get; set; } 
+    public State State { get; set; }
+
 }
