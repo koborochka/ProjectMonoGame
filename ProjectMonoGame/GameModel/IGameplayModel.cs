@@ -8,7 +8,6 @@ namespace ProjectMonoGame;
 public interface IGameplayModel
 {
     event EventHandler<GameplayEventArgs> Updated;
-
     void Update();
     void MovePlayer(List<Direction> direction);
     void LoadTextures(Dictionary<int, Texture2D> textures);
@@ -16,7 +15,6 @@ public interface IGameplayModel
     void Initialize();
     void StartNewGame();
     void StopGenerateObjects();
-
     int PlayerId { get; set; }
     public enum Direction : byte
     {

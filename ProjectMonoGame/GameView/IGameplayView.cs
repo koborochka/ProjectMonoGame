@@ -14,8 +14,7 @@ public interface IGameplayView
     event EventHandler ReturnedToMenu;
 
     void LoadGameCycleParameters(Dictionary<int, IEntity> objects, int playerId, GameState currentGameState);
-    void Run();
-}
+    void Run(); }
 
 public class ControlsEventArgs : EventArgs
 {

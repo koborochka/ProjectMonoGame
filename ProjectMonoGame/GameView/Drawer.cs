@@ -9,10 +9,18 @@ public partial class GameCycleView
 {
     protected override void Draw(GameTime gameTime)
     {
-        if (_currentGameState.State == State.Menu)
-            DrawMenu(gameTime);
-        else
-            DrawGame(gameTime);
+        switch (_currentGameState.State)
+        {
+            case State.Menu:
+                DrawMenu(gameTime);
+                break;
+            case State.Game:
+                DrawGame(gameTime);
+                break;
+            default:
+                DrawDeathScreen(gameTime);
+                break;
+        }
     }
 
     private void DrawGame(GameTime gameTime)
@@ -51,6 +59,22 @@ public partial class GameCycleView
         DrawButton(_objects[1] as Button);
         var menuCatImage = _textures[_menuCatImageId];
         _spriteBatch.Draw(menuCatImage,new Vector2(_mapWidth -menuCatImage.Width, _mapHeight - menuCatImage.Height) / 2, Color.White);
+
+        _spriteBatch.End();
+    }
+    private void DrawDeathScreen(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(Color.Black);
+        IsMouseVisible = true;
+        base.Draw(gameTime);
+        
+        _spriteBatch.Begin();
+        DrawBackground(_backgroundMenuImageId);    
+        DrawButton(_objects[0] as Button);
+        DrawButton(_objects[1] as Button);
+        DrawButton(_objects[2] as Button);
+        //var menuCatImage = _textures[_menuCatImageId];
+       // _spriteBatch.Draw(menuCatImage,new Vector2(_mapWidth -menuCatImage.Width, _mapHeight - menuCatImage.Height) / 2, Color.White);
 
         _spriteBatch.End();
     }

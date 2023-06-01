@@ -42,7 +42,7 @@ public partial class GameCycleView : Game, IGameplayView
         _mapHeight = GraphicsDevice.DisplayMode.Height;
         _graphics.PreferredBackBufferWidth = _mapWidth;
         _graphics.PreferredBackBufferHeight = _mapHeight;
-        _graphics.IsFullScreen = true;
+        _graphics.IsFullScreen = false;
         _graphics.ApplyChanges();
         
         base.Initialize();
@@ -76,20 +76,33 @@ public partial class GameCycleView : Game, IGameplayView
         _currentGameState = currentGameState;
     }
 
+    public void ChangeMainScreenOnDeathScreen()
+    {
+        _currentGameState.State = State.DeathScreen;
+    }
+
     protected override void Update(GameTime gameTime)
     {
         CheckMenuClickableButtons();
+        CheckDeathScreenClickableButtons();
 
         var pressedKeys = Keyboard.GetState().GetPressedKeys();
         var directions = new List<IGameplayModel.Direction>();
         foreach (var key in pressedKeys)
         {
-            if(_currentGameState.State == State.Game)
-                CheckInGameButtons(key, directions);
-            else
-                CheckInMenuButtons(key);
+            switch (_currentGameState.State)
+            {
+                case State.Game:
+                    CheckInGameButtons(key, directions);
+                    break;
+                case State.Menu:
+                    CheckInMenuButtons(key);
+                    break;
+                case State.DeathScreen:
+                    CheckInDeathScreenButtons(key);
+                    break;
+            }
         }
-        
         base.Update(gameTime);
         
         CycleFinished?.Invoke(this, EventArgs.Empty);
@@ -130,7 +143,7 @@ public partial class GameCycleView : Game, IGameplayView
     private void CheckMenuClickableButtons()
     {
         if (_currentGameState.State != State.Menu) return;
-        
+
         var buttons = _objects.Values.Cast<Button>().ToArray();
         
         if (buttons[1].IsClicked())
@@ -143,6 +156,7 @@ public partial class GameCycleView : Game, IGameplayView
     }
     private void CheckInMenuButtons(Keys key)
     {
+
         if ((DateTime.Now - _lastTimeExitButtonPressed).Milliseconds < 200 || _playerId == 0) 
             return;
         if (key == Keys.Escape) 
@@ -151,4 +165,31 @@ public partial class GameCycleView : Game, IGameplayView
         _lastTimeExitButtonPressed = DateTime.Now;
     }
     
+    private void CheckInDeathScreenButtons(Keys key)
+    {
+
+        if ((DateTime.Now - _lastTimeExitButtonPressed).Milliseconds < 200 || _playerId == 0) 
+            return;
+        if (key == Keys.Escape) 
+            _currentGameState.State = State.Menu ;
+        
+        _lastTimeExitButtonPressed = DateTime.Now;
+    }
+    
+    private void CheckDeathScreenClickableButtons()
+    {
+        if (_currentGameState.State != State.DeathScreen) return;
+
+        var buttons = _objects.Values.Cast<Button>().ToArray();
+        
+        if (buttons[1].IsClicked())
+            _currentGameState.State = State.Menu;
+        else if (buttons[0].IsClicked())
+        {
+            StartNewGame!(this, EventArgs.Empty);
+            buttons[0].Clicked();
+        }
+        if (buttons[2].IsClicked())
+            _currentGameState.State = State.Menu;
+    }
 }

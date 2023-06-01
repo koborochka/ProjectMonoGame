@@ -35,11 +35,6 @@ public class GameplayPresenter
         _gameplayModel.MovePlayer(e.Directions);
     }
 
-    private void ModelViewUpdate(object sender, GameplayEventArgs e)
-    {
-        _gameplayView.LoadGameCycleParameters(e.Objects, e.PlayerId, e.CurrentGameState);
-    }
-
     private void ViewTexturesDownloaded(object sender, TextureEventArgs e)
     {
         _gameplayModel.LoadTextures(e.Textures);
@@ -57,5 +52,9 @@ public class GameplayPresenter
     private void ViewModelReturnedToMenu(object sender, EventArgs e)
     {
         _gameplayModel.StopGenerateObjects();
+    }
+    private void ModelViewUpdate (object sender, GameplayEventArgs e)
+    {
+        _gameplayView.LoadGameCycleParameters(e.Objects, e.PlayerId, e.CurrentGameState);
     }
 }

@@ -18,9 +18,8 @@ public class Button : IEntity
     public void Clicked() => _isClicked = false;
     public void Update() {}
 
-    public Button(int imageId, Vector2 position, int buttonWidth, int buttonHeight, string text, int id)
+    public Button(Vector2 position, int buttonWidth, int buttonHeight, string text, int id)
     {
-        ImageId = imageId;
         Position = position;
         Text = text;
         _height = buttonHeight;

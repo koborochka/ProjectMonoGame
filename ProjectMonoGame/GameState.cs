@@ -3,7 +3,8 @@
 public enum State : byte
 {
     Game, 
-    Menu
+    Menu,
+    DeathScreen
 }
 
 public class GameState

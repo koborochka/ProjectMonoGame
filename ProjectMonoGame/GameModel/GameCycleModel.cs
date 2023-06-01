@@ -38,6 +38,7 @@ public partial class GameCycleModel : IGameplayModel
     {
         _asteroidTimer.Dispose();
         _spaceCatTimer.Dispose();
+        _currentGameState.State = State.Menu;
     }
 
     public void StartNewGame()
@@ -57,6 +58,10 @@ public partial class GameCycleModel : IGameplayModel
             case State.Menu:
                 InitializeMenu();
                 break;
+            
+            case State.DeathScreen:
+                InitializeDeathScreen();
+                break;
         }
     }
 
@@ -75,11 +80,10 @@ public partial class GameCycleModel : IGameplayModel
     {
         var startGameButtonPosition = new Vector2(30, 515);
         
-        var startGameButton = new Button(1, startGameButtonPosition, 300, 
+        var startGameButton = new Button(startGameButtonPosition, 300, 
             40, "Start new game", 0);
         
-        var exitButton = new Button(
-            3, startGameButtonPosition + new Vector2(0, 80), 
+        var exitButton = new Button(startGameButtonPosition + new Vector2(0, 80), 
             80, 40, "Exit", 1);
         
         _buttons = new Dictionary<int, IEntity>
@@ -89,6 +93,27 @@ public partial class GameCycleModel : IGameplayModel
         };
         
         UpdateMenu();
+    }
+    
+    private void InitializeDeathScreen()  //
+    {
+        var startGameButtonPosition = new Vector2(530, 515);
+        
+        var startGameButton = new Button(startGameButtonPosition, 300, 40, "Start", 0);
+        
+        var exitButton = new Button(startGameButtonPosition + new Vector2(0, 160), 
+            80, 40, "Exit", 1);
+        var returnToMenuButton = new Button(startGameButtonPosition + new Vector2(0, 80), 
+            80, 40, "Menu", 2);
+        
+        _buttons = new Dictionary<int, IEntity>
+        {
+            {0, startGameButton},
+            {1, exitButton},
+            {2, returnToMenuButton}
+        };
+        
+        UpdateDeathScreen();
     }
 
     public void Update()
@@ -103,6 +128,10 @@ public partial class GameCycleModel : IGameplayModel
             
             case State.Menu:
                 UpdateMenu();
+                break;
+            
+            case State.DeathScreen:
+                UpdateDeathScreen();
                 break;
         }
     }
@@ -129,13 +158,28 @@ public partial class GameCycleModel : IGameplayModel
                 {
                     var currentAsteroid = (Asteroid)obj;
                     player.HealthPoints -= currentAsteroid.GetDamageByImageId(currentAsteroid.ImageId);
+                    if (player.HealthPoints <= 0)
+                    {
+                        _currentGameState.State = State.DeathScreen; 
+                        InitializeDeathScreen();
+                        return;
+                    }
                 }
             }
         }
-
+        
         Updated?.Invoke(this, new GameplayEventArgs(Objects, PlayerId, _currentGameState));
     }
     private void UpdateMenu()
+    {
+        var mouseState = Mouse.GetState();
+        foreach (var button in _buttons.Values.Cast<Button>())
+            button.Update(mouseState);
+        
+        Updated?.Invoke(this, new GameplayEventArgs(_buttons, PlayerId, _currentGameState));
+    }
+    
+    private void UpdateDeathScreen()
     {
         var mouseState = Mouse.GetState();
         foreach (var button in _buttons.Values.Cast<Button>())
