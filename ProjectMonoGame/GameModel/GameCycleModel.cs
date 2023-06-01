@@ -71,11 +71,11 @@ public class GameCycleModel : IGameplayModel
     
     private void InitializeMenu()
     {
-        var startGameButtonPosition = new Vector2(30, 515);
-        var startGameButton = new Button( startGameButtonPosition, 300, 
-            40, "Start new game", 0);
-        var exitButton = new Button(startGameButtonPosition + new Vector2(0, 80), 
-            80, 40, "Exit", 1);
+        var startGameButtonPosition = new Vector2(100, 515);
+        var startGameButton = new Button( startGameButtonPosition, 200, 
+            40, "Новая игра", 0);
+        var exitButton = new Button(startGameButtonPosition + new Vector2(0, 100), 
+            100, 40, "Выйти", 1);
         
         _buttons = new Dictionary<int, IEntity>
         {

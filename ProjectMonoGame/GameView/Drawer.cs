@@ -27,7 +27,7 @@ public partial class GameCycleView
         {
             _spriteBatch.Draw(_textures[obj.ImageId],  obj.Position, Color.White);
         }
-        _spriteBatch.DrawString(_font, $"x{player.CatCaught}",
+        _spriteBatch.DrawString(_font, $"Котиков собрано: {player.CatCaught}",
             new Vector2(1325, 40), Color.Ivory);
         for (var i = 0; i < player.HealthPoints ; i++)
         {
@@ -49,8 +49,10 @@ public partial class GameCycleView
         DrawButton(_objects[1] as Button);
         var menuCatImage = _textures[_menuCatImageId];
         _spriteBatch.Draw(menuCatImage,new Vector2(_mapWidth -menuCatImage.Width, _mapHeight - menuCatImage.Height) / 2, Color.White);
-       /* _spriteBatch.DrawString(_font, $"Лучший результат: {(player?.CatCaught != null ? player.CatCaught.ToString() : "0")}",
-            new Vector2(_mapWidth-100, 200), Color.Ivory);*/
+        _spriteBatch.DrawString(_font, "Собирай котиков и уклоняйся от астероидов!",
+            new Vector2(_mapWidth / 3, 80), Color.Orchid);
+        _spriteBatch.DrawString(_font, "Управление клавишами A,S,D,W",
+            new Vector2(_mapWidth / 3 + 50, _mapHeight - 150), Color.Plum);
         _spriteBatch.End();
     }
     
