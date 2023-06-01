@@ -129,6 +129,12 @@ public partial class GameCycleModel : IGameplayModel
                 {
                     var currentAsteroid = (Asteroid)obj;
                     player.HealthPoints -= currentAsteroid.GetDamageByImageId(currentAsteroid.ImageId);
+                    if (player.HealthPoints <= 0)
+                    {
+                        _currentGameState.State = State.Menu; 
+                        InitializeMenu();
+                        return;
+                    }
                 }
             }
         }

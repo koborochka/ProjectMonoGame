@@ -122,6 +122,7 @@ public partial class GameCycleView : Game, IGameplayView
             case Keys.Escape:
                 _currentGameState.State = State.Menu;
                 ReturnedToMenu!(this, EventArgs.Empty);
+                _lastTimeExitButtonPressed = DateTime.Now;
                 break;         
         }
         PlayerMoved?.Invoke(this, new ControlsEventArgs (directions));
@@ -143,12 +144,11 @@ public partial class GameCycleView : Game, IGameplayView
     }
     private void CheckInMenuButtons(Keys key)
     {
-        if ((DateTime.Now - _lastTimeExitButtonPressed).Milliseconds < 200 || _playerId == 0) 
+        if ((DateTime.Now - _lastTimeExitButtonPressed).Milliseconds < 150 ) 
             return;
         if (key == Keys.Escape) 
             Exit();
         
         _lastTimeExitButtonPressed = DateTime.Now;
     }
-    
 }

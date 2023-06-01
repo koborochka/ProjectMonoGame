@@ -1,4 +1,5 @@
-﻿using System.Net.Mime;
+﻿using System;
+using System.Net.Mime;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectMonoGame.Objects;
@@ -44,14 +45,15 @@ public partial class GameCycleView
         GraphicsDevice.Clear(Color.Black);
         IsMouseVisible = true;
         base.Draw(gameTime);
-        
+
         _spriteBatch.Begin();
         DrawBackground(_backgroundMenuImageId);    
         DrawButton(_objects[0] as Button);
         DrawButton(_objects[1] as Button);
         var menuCatImage = _textures[_menuCatImageId];
         _spriteBatch.Draw(menuCatImage,new Vector2(_mapWidth -menuCatImage.Width, _mapHeight - menuCatImage.Height) / 2, Color.White);
-
+       /* _spriteBatch.DrawString(_font, $"Лучший результат: {(player?.CatCaught != null ? player.CatCaught.ToString() : "0")}",
+            new Vector2(_mapWidth-100, 200), Color.Ivory);*/
         _spriteBatch.End();
     }
     
