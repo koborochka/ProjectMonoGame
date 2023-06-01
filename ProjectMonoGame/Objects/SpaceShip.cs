@@ -17,8 +17,8 @@ public class SpaceShip : IEntity
     public int HealthPoints { get; set; } = 10;
     public Vector2 Position
     {
-        get => _position;
-        private set
+        get => _position; 
+        set
         {
             _position.X = MathHelper.Clamp(value.X, 0, _mapWidth - TextureWidth);
             _position.Y = MathHelper.Clamp(value.Y, 0, _mapHeight - TextureHeight);
