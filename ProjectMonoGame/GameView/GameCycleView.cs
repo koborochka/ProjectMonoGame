@@ -28,7 +28,6 @@ public partial class GameCycleView : Game, IGameplayView
     public event EventHandler<ControlsEventArgs> PlayerMoved;
     public event EventHandler<TextureEventArgs> TexturesDownloaded;
     public event EventHandler StartNewGame;
-    public event EventHandler ReturnedToMenu;
     public GameCycleView()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -121,7 +120,6 @@ public partial class GameCycleView : Game, IGameplayView
             }
             case Keys.Escape:
                 _currentGameState.State = State.Menu;
-                ReturnedToMenu!(this, EventArgs.Empty);
                 _lastTimeExitButtonPressed = DateTime.Now;
                 break;         
         }

@@ -15,8 +15,6 @@ public interface IGameplayModel
     Dictionary<int, IEntity> Objects { get; set; }
     void Initialize();
     void StartNewGame();
-    void StopGenerateObjects();
-
     int PlayerId { get; set; }
     public enum Direction : byte
     {

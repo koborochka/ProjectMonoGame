@@ -19,7 +19,6 @@ public class GameplayPresenter
         _gameplayView.PlayerMoved += ViewModelMovePlayer;
         _gameplayView.TexturesDownloaded += ViewTexturesDownloaded;
         _gameplayView.StartNewGame += ViewModelStartNewGame;
-        _gameplayView.ReturnedToMenu += ViewModelReturnedToMenu;
         _gameplayModel.Updated += ModelViewUpdate;
         
         _gameplayModel.Initialize(); 
@@ -52,10 +51,5 @@ public class GameplayPresenter
     private void ViewModelStartNewGame(object sender, EventArgs e)
     {
         _gameplayModel.StartNewGame();
-    }
-
-    private void ViewModelReturnedToMenu(object sender, EventArgs e)
-    {
-        _gameplayModel.StopGenerateObjects();
     }
 }

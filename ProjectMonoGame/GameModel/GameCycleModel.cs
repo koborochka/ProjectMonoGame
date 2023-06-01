@@ -9,7 +9,7 @@ using ProjectMonoGame.Objects;
 
 namespace ProjectMonoGame.GameModel;
 
-public partial class GameCycleModel : IGameplayModel
+public class GameCycleModel : IGameplayModel
 {
     public event EventHandler<GameplayEventArgs> Updated;
     public int PlayerId { get; set; }
@@ -22,9 +22,12 @@ public partial class GameCycleModel : IGameplayModel
     private const float ConstantAcceleration = 0.06f; 
     
     private int _currentId ;
-    
-    private Timer _asteroidTimer;
-    private Timer _spaceCatTimer;
+
+    private int _asteroidTicker ;
+    private int _spaceCatTicker ;
+
+    private const int AsteroidGenerationInterval = 60; 
+    private const int SpaceCatGenerationInterval = 300;
     
     private readonly int _mapWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
     private readonly int _mapHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -32,12 +35,6 @@ public partial class GameCycleModel : IGameplayModel
     public void LoadTextures(Dictionary<int, Texture2D> textures)
     {
         _textures = textures;
-    }
-
-    public void StopGenerateObjects()
-    {
-        _asteroidTimer.Dispose();
-        _spaceCatTimer.Dispose();
     }
 
     public void StartNewGame()
@@ -67,19 +64,17 @@ public partial class GameCycleModel : IGameplayModel
         Objects.Add(_currentId, player);
         PlayerId = _currentId;
         _currentId++;
-        _asteroidTimer = new Timer(GenerateAsteroid, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
-        _spaceCatTimer = new Timer(GenerateSpaceCat, null, TimeSpan.FromSeconds(7), TimeSpan.FromSeconds(5));
+
+        _asteroidTicker = 0;
+        _spaceCatTicker = 0;
     }
     
     private void InitializeMenu()
     {
         var startGameButtonPosition = new Vector2(30, 515);
-        
-        var startGameButton = new Button(1, startGameButtonPosition, 300, 
+        var startGameButton = new Button( startGameButtonPosition, 300, 
             40, "Start new game", 0);
-        
-        var exitButton = new Button(
-            3, startGameButtonPosition + new Vector2(0, 80), 
+        var exitButton = new Button(startGameButtonPosition + new Vector2(0, 80), 
             80, 40, "Exit", 1);
         
         _buttons = new Dictionary<int, IEntity>
@@ -97,8 +92,6 @@ public partial class GameCycleModel : IGameplayModel
         {
             case State.Game:
                 UpdateGame();
-                if (_currentGameState.State == State.Menu)
-                    UpdateMenu();
                 break;
             
             case State.Menu:
@@ -138,7 +131,10 @@ public partial class GameCycleModel : IGameplayModel
                 }
             }
         }
-
+        
+        if (++_asteroidTicker % AsteroidGenerationInterval == 0) GenerateAsteroid();
+        if (++_spaceCatTicker % SpaceCatGenerationInterval == 0) GenerateSpaceCat();
+        
         Updated?.Invoke(this, new GameplayEventArgs(Objects, PlayerId, _currentGameState));
     }
     private void UpdateMenu()
@@ -168,12 +164,12 @@ public partial class GameCycleModel : IGameplayModel
         }
     }
 
-    private void GenerateAsteroid(object state)
+    private void GenerateAsteroid()
     {
         GenerateObject<Asteroid>();
     }
 
-    private void GenerateSpaceCat(object state)
+    private void GenerateSpaceCat()
     {
         GenerateObject<SpaceCat>();
     }
