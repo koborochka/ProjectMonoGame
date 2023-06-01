@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ProjectMonoGame;
 
-public abstract class Asteroid : IEntity
+public class Asteroid : IEntity
 {
     private readonly Dictionary<int, int> _speedCoefsForAsteroidByImagesId = new() { { 1, 2 }, { 2, 3 }, { 3, 5 } };
     private readonly Dictionary<int, int> _asteroidDamageByImageId = new() { { 1, 3 }, { 2, 2 }, { 3, 1 } };
@@ -36,7 +36,7 @@ public abstract class Asteroid : IEntity
         Collider = new RectangleCollider((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
     }
 
-    protected Asteroid(int mapWidth, int mapHeight, int id, Vector2 playerPosition ,Dictionary<int, Texture2D> textures)
+    public Asteroid(int mapWidth, int mapHeight, int id, Vector2 playerPosition ,Dictionary<int, Texture2D> textures)
     {
         _mapWidth = mapWidth;
         _mapHeight = mapHeight;

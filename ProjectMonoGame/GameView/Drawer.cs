@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Net.Mime;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ProjectMonoGame.Objects;
 
@@ -17,13 +18,12 @@ public partial class GameCycleView
     private void DrawGame(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
+        IsMouseVisible = false;
         base.Draw(gameTime);
         var player = (SpaceShip)_objects[_playerId];
         
         _spriteBatch.Begin();
-        
-        var destinationRectangle = new Rectangle(0, 0, _mapWidth, _mapHeight);
-        _spriteBatch.Draw(_textures[_backgroundImageId], destinationRectangle, Color.White);
+        DrawBackground(_backgroundGameImageId);
 
         foreach (var obj in _objects.Values)
         {
@@ -42,16 +42,27 @@ public partial class GameCycleView
     private void DrawMenu(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
-        
+        IsMouseVisible = true;
         base.Draw(gameTime);
+        
         _spriteBatch.Begin();
+        DrawBackground(_backgroundMenuImageId);    
         DrawButton(_objects[0] as Button);
         DrawButton(_objects[1] as Button);
+        var menuCatImage = _textures[_menuCatImageId];
+        _spriteBatch.Draw(menuCatImage,new Vector2(_mapWidth -menuCatImage.Width, _mapHeight - menuCatImage.Height) / 2, Color.White);
+
         _spriteBatch.End();
     }
     
     private void DrawButton(Button button)
     {
         _spriteBatch.DrawString(_font, button.Text, button.Position, button.TextColor);
+    }
+
+    private void DrawBackground(int imageId)
+    {
+        var destinationRectangle = new Rectangle(0, 0, _mapWidth, _mapHeight);
+        _spriteBatch.Draw(_textures[imageId], destinationRectangle, Color.White);
     }
 }

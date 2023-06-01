@@ -17,7 +17,7 @@ public partial class GameCycleModel : IGameplayModel
     private Dictionary<int, IEntity> _buttons;
     private Dictionary<int, Texture2D> _textures;
     
-    private GameState _currentGameState = new GameState();
+    private GameState _currentGameState = new();
 
     private const float ConstantAcceleration = 0.06f; 
     

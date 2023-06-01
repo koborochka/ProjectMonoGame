@@ -19,7 +19,9 @@ public partial class GameCycleView : Game, IGameplayView
     
     private DateTime _lastTimeExitButtonPressed = DateTime.Now;
     private int _playerId;
-    private int _backgroundImageId;
+    private int _backgroundGameImageId;
+    private int _backgroundMenuImageId;
+    private int _menuCatImageId;
     private int _mapWidth;
     private int _mapHeight;
     public event EventHandler CycleFinished;
@@ -54,9 +56,14 @@ public partial class GameCycleView : Game, IGameplayView
         _textures.Add(2, Content.Load<Texture2D>("asteroid_2"));
         _textures.Add(3, Content.Load<Texture2D>("asteroid_3"));
         _textures.Add(4, Content.Load<Texture2D>("space_cat"));
-        _backgroundImageId = 5;
-        _textures.Add(_backgroundImageId, Content.Load<Texture2D>("background"));
+        _backgroundGameImageId = 5;
+        _textures.Add(_backgroundGameImageId, Content.Load<Texture2D>("background"));
         _textures.Add(6, Content.Load<Texture2D>("heart"));
+        _textures.Add(7, Content.Load<Texture2D>("menu_cat"));
+        _menuCatImageId = 7;
+        _textures.Add(8, Content.Load<Texture2D>("menu_background"));
+        _backgroundMenuImageId = 8;
+
         _font = Content.Load<SpriteFont>("font");
         
         TexturesDownloaded?.Invoke(this, new TextureEventArgs(_textures));
